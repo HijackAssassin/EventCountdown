@@ -1,0 +1,40 @@
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
+
+#include "countdowntile.h"
+#include <QMainWindow>
+#include <QGridLayout>
+
+QT_BEGIN_NAMESPACE
+namespace Ui { class MainWindow; }
+QT_END_NAMESPACE
+
+class MainWindow : public QMainWindow {
+    Q_OBJECT
+
+public:
+    MainWindow(QWidget *parent = nullptr);
+    ~MainWindow();
+
+private slots:
+    void handleCreateButton();
+    void onPlusButtonClicked();
+    void handleCountdownCreated(const QString &title, const QDateTime &datetime);
+    void toggleEditMode();
+    void handleTileDeletion(CountdownTile* tile);
+    void handleImageSelection();
+    void handleImageButton();
+
+private:
+    Ui::MainWindow *ui;
+    QGridLayout *tileLayout = nullptr;
+    int tileCount = 0;
+    void saveCountdowns();
+    void loadCountdowns();
+    bool isLoading = false;
+    bool editMode = false;
+    QString selectedImagePath;  // stores the image copied into the app folder
+    CountdownTile* editingTile = nullptr;
+};
+
+#endif // MAINWINDOW_H
