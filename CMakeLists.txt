@@ -24,6 +24,11 @@ set(PROJECT_SOURCES
 
 )
 
+# Add Windows icon resource if building on Windows
+if(WIN32)
+    list(APPEND PROJECT_SOURCES appicon.rc)
+endif()
+
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(EventCountdowns
         MANUAL_FINALIZATION

@@ -1,0 +1,22 @@
+# ninja log v6
+21	46	7729139509893464	CMakeFiles/clean.additional	321391b2684b2653
+46	53	7729139510143697	clean	577b940aee94fbd7
+33	56	7729139569363532	CMakeFiles/clean.additional	321391b2684b2653
+56	63	7729139569593742	clean	577b940aee94fbd7
+29	49	7729139587973740	CMakeFiles/clean.additional	321391b2684b2653
+49	55	7729139588173922	clean	577b940aee94fbd7
+30	1298	7729139600675276	EventCountdowns_autogen/timestamp	1e12f995e18e9ac6
+30	1298	7729139600675276	EventCountdowns_autogen/mocs_compilation.cpp	1e12f995e18e9ac6
+30	1298	7729139600675276	D:/Patrick/Documents/EventCountdowns/build/Desktop_Qt_6_9_1_MinGW_64_bit-Release/EventCountdowns_autogen/timestamp	1e12f995e18e9ac6
+30	1298	7729139600675276	D:/Patrick/Documents/EventCountdowns/build/Desktop_Qt_6_9_1_MinGW_64_bit-Release/EventCountdowns_autogen/mocs_compilation.cpp	1e12f995e18e9ac6
+1303	1353	7729139602276731	EventCountdowns_autogen/EWIEGA46WW/qrc_resources.cpp	5a2889beb9f90dde
+1303	1353	7729139602276731	D:/Patrick/Documents/EventCountdowns/build/Desktop_Qt_6_9_1_MinGW_64_bit-Release/EventCountdowns_autogen/EWIEGA46WW/qrc_resources.cpp	5a2889beb9f90dde
+1365	1434	7729139602456890	CMakeFiles/EventCountdowns.dir/appicon.rc.obj	243ac64868ea9525
+1374	1444	7729139602546971	CMakeFiles/EventCountdowns.dir/EventCountdowns_autogen/EWIEGA46WW/qrc_resources.cpp.obj	9cf02574528b6bd2
+1368	3093	7729139602486931	CMakeFiles/EventCountdowns.dir/utils.cpp.obj	8e4541d93723b799
+1356	3449	7729139602366811	CMakeFiles/EventCountdowns.dir/main.cpp.obj	a785eb8284cdad39
+1371	3563	7729139602516951	CMakeFiles/EventCountdowns.dir/editcountdowndialog.cpp.obj	844ccbc75c62b119
+1353	3735	7729139602336792	CMakeFiles/EventCountdowns.dir/EventCountdowns_autogen/mocs_compilation.cpp.obj	c2fc32a8883044b3
+1362	4005	7729139602426877	CMakeFiles/EventCountdowns.dir/countdowntile.cpp.obj	116524f237a7caa1
+1359	4655	7729139602396841	CMakeFiles/EventCountdowns.dir/mainwindow.cpp.obj	d4b612b6b9a65294
+4656	4868	7729139635366810	EventCountdowns.exe	1d1f6105365e5402
