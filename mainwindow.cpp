@@ -60,10 +60,11 @@ MainWindow::MainWindow(QWidget *parent)
 void MainWindow::handleImageSelection() {
     QString file = QFileDialog::getOpenFileName(this, "Select Image", "", "Images (*.png *.jpg *.jpeg)");
     if (!file.isEmpty()) {
-        QDir dir(QCoreApplication::applicationDirPath() + "/tile_images");
-        if (!dir.exists()) dir.mkpath(".");
+        QString appDataDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+        QDir imageDir(appDataDir + "/tile_images");
+        if (!imageDir.exists()) imageDir.mkpath(".");
 
-        QString destPath = dir.filePath(QFileInfo(file).fileName());
+        QString destPath = imageDir.filePath(QFileInfo(file).fileName());
         QFile::copy(file, destPath);
         selectedImagePath = destPath;
     }

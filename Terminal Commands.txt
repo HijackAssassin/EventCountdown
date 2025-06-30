@@ -22,8 +22,7 @@ cd D:\Patrick\Documents\EventCountdowns
 # (optional) remove previous build folder to clean it fully
 rmdir /S /Q build
 
-# Build the project
-cmake --build . --config Release
+# Build the project in QT Creator
 
 
 

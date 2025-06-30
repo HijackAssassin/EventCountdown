@@ -3,14 +3,14 @@ AppName=EventCountdowns
 AppVersion=1.0
 DefaultDirName={autopf}\EventCountdowns
 DefaultGroupName=EventCountdowns
-OutputDir=C:\Users\PatyT\Downloads\Event Countdowns\Installer
+OutputDir=C:\Users\PatyT\Downloads
 OutputBaseFilename=EventCountdownsSetup
 Compression=lzma
 SolidCompression=yes
 
 [Files]
 ; Copy all contents (including subfolders) into Program Files\EventCountdowns\
-Source: "C:\Users\PatyT\Downloads\Event Countdowns\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\Users\PatyT\Downloads\EventCountdowns\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{group}\EventCountdowns"; Filename: "{app}\EventCountdowns.exe"; WorkingDir: "{app}"
