@@ -89,17 +89,7 @@ void MainWindow::onPlusButtonClicked() {
 
         ui->createFrame->setGeometry(x, y, w, h);
         ui->createFrame->raise();
-        ui->createFrame->setStyleSheet(R"(
-            QFrame#createFrame {
-                background-color: white;
-                border-radius: 10px;
-                border: 2px solid #999;
-            }
-            QLineEdit, QComboBox, QPushButton {
-                font-size: 14pt;
-                padding: 6px;
-            }
-        )");
+        applyCreateFrameStyle();
     }
 
     ui->createFrame->setVisible(!ui->createFrame->isVisible());
@@ -115,9 +105,12 @@ void MainWindow::handleCreateButton() {
     int hour = ui->hourCombo->currentData().toInt();
     QDateTime datetime(QDate(year, month, day), QTime(hour, 0));
 
+    bool unhide = ui->unhideCheckBox->isChecked();
+
     if (editingTile) {
         editingTile->setTitle(title);
         editingTile->setTargetDateTime(datetime);
+        editingTile->setUnhideAfterExpiry(unhide);
         if (!selectedImagePath.isEmpty()) {
             editingTile->setBackgroundImage(selectedImagePath);
         }
@@ -127,15 +120,16 @@ void MainWindow::handleCreateButton() {
         selectedImagePath.clear();
         saveCountdowns();
     } else {
-        handleCountdownCreated(title, datetime);
+        handleCountdownCreated(title, datetime, unhide);
     }
 
     ui->titleInput->clear();
     ui->createFrame->setVisible(false);
 }
 
-void MainWindow::handleCountdownCreated(const QString &title, const QDateTime &target) {
+void MainWindow::handleCountdownCreated(const QString &title, const QDateTime &target, bool unhide) {
     CountdownTile *tile = new CountdownTile(title, target);
+    tile->setUnhideAfterExpiry(unhide);
     tile->setFixedSize(627, 353);
 
     if (!selectedImagePath.isEmpty()) {
@@ -174,6 +168,7 @@ void MainWindow::handleCountdownCreated(const QString &title, const QDateTime &t
         int y = (this->height() - h) / 2;
         ui->createFrame->setGeometry(x, y, w, h);
         ui->createFrame->raise();
+        applyCreateFrameStyle();
         ui->createFrame->setVisible(true);
     });
 }
@@ -185,6 +180,7 @@ void MainWindow::saveCountdowns() {
         obj["title"] = tile->getTitle();
         obj["datetime"] = tile->getTargetDateTime().toString(Qt::ISODate);
         obj["background"] = tile->getBackgroundImagePath();
+        obj["unhideAfterExpiry"] = tile->getUnhideAfterExpiry();
         array.append(obj);
     }
 
@@ -235,6 +231,7 @@ void MainWindow::loadCountdowns() {
             ui->plusButton->setText("Cancel Edit");
             ui->createButton->setText("Save Event");
             ui->titleInput->setText(tile->getTitle());
+            ui->unhideCheckBox->setChecked(tile->getUnhideAfterExpiry());
 
             QDateTime dt = tile->getTargetDateTime();
             ui->yearCombo->setCurrentText(QString::number(dt.date().year()));
@@ -247,6 +244,7 @@ void MainWindow::loadCountdowns() {
             int y = (this->height() - h) / 2;
             ui->createFrame->setGeometry(x, y, w, h);
             ui->createFrame->raise();
+            applyCreateFrameStyle();
             ui->createFrame->setVisible(true);
         });
     }
@@ -265,6 +263,15 @@ void MainWindow::toggleEditMode() {
 }
 
 void MainWindow::handleTileDeletion(CountdownTile* tile) {
+    if (editingTile == tile) {
+        editingTile = nullptr;
+        ui->createFrame->setVisible(false);
+        ui->plusButton->setText("+");
+        ui->createButton->setText("Create Event");
+        ui->titleInput->clear();
+        selectedImagePath.clear();
+    }
+
     CountdownTile::getAllTiles().removeOne(tile);
     delete tile;
 
@@ -306,4 +313,18 @@ void MainWindow::handleImageButton() {
 
         selectedImagePath = destPath;
     }
+}
+
+void MainWindow::applyCreateFrameStyle() {
+    ui->createFrame->setStyleSheet(R"(
+            QFrame#createFrame {
+                background-color: white;
+                border-radius: 10px;
+                border: 2px solid #999;
+            }
+            QLineEdit, QComboBox, QPushButton {
+                font-size: 14pt;
+                padding: 6px;
+            }
+        )");
 }

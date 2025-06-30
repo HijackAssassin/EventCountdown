@@ -16,6 +16,10 @@ class CountdownTile : public QFrame
     Q_OBJECT
 
 public:
+    void setUnhideAfterExpiry(bool enabled);
+    bool getUnhideAfterExpiry() const;
+    void setShowCountUp(bool enabled);
+    bool getShowCountUp() const;
     CountdownTile(const QString &title, const QDateTime &target, QWidget *parent = nullptr);
     static QList<CountdownTile*>& getAllTiles();
     QString getTitle() const;
@@ -33,6 +37,8 @@ signals:
     void requestEdit(CountdownTile* tile);
 
 private:
+    bool unhideAfterExpiry = false;
+    bool showCountUp = false;
     QLabel *titleLabel;
     QLabel *dayLabel;
     QLabel *hourLabel;
@@ -45,6 +51,10 @@ private:
     void updateCountdown();
     QString selectedImagePath;
     QPushButton* editButton = nullptr;
+    QLabel *dayText;
+    QLabel *hourText;
+    QLabel *minuteText;
+    QLabel *secondText;
 
     static QTimer *sharedTimer;
     static QList<CountdownTile*> allTiles;

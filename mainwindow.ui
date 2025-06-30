@@ -73,6 +73,13 @@
         <widget class="QComboBox" name="hourCombo"/>
        </item>
        <item>
+        <widget class="QCheckBox" name="unhideCheckBox">
+         <property name="text">
+          <string>Count Up</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QPushButton" name="chooseImageButton">
          <property name="text">
           <string>Select Image</string>

@@ -17,9 +17,10 @@ public:
     ~MainWindow();
 
 private slots:
+    void applyCreateFrameStyle();
     void handleCreateButton();
     void onPlusButtonClicked();
-    void handleCountdownCreated(const QString &title, const QDateTime &datetime);
+    void handleCountdownCreated(const QString &title, const QDateTime &target, bool unhide);
     void toggleEditMode();
     void handleTileDeletion(CountdownTile* tile);
     void handleImageSelection();

@@ -100,23 +100,26 @@ CountdownTile::CountdownTile(const QString &title, const QDateTime &target, QWid
     grid->addWidget(secondLabel, 0, 3, Qt::AlignCenter);
 
     // 🏷️ Labels row (row 1)
-    auto d = new QLabel("days", this);
-    auto h = new QLabel("hours", this);
-    auto m = new QLabel("minutes", this);
-    auto s = new QLabel("seconds", this);
+    dayText = new QLabel("days", this);
+    hourText = new QLabel("hours", this);
+    minuteText = new QLabel("minutes", this);
+    secondText = new QLabel("seconds", this);
 
-    d->setAlignment(Qt::AlignCenter);
-    d->setStyleSheet("color: white; background: none; border: none; margin-top: 0px; font-size: 14pt;");
+    dayText->setAlignment(Qt::AlignCenter);
+    dayText->setStyleSheet("color: white; background: none; border: none; margin-top: 0px; font-size: 14pt;");
 
-    for (QLabel* lbl : {h, m, s}) {
+    dayText->setAlignment(Qt::AlignCenter);
+    dayText->setStyleSheet("color: white; background: none; border: none; font-size: 14pt;");
+
+    for (QLabel* lbl : {hourText, minuteText, secondText}) {
         lbl->setAlignment(Qt::AlignCenter);
-        lbl->setStyleSheet("color: white; background: none; border: none; margin-top: 0px; font-size: 14pt;");
+        lbl->setStyleSheet("color: white; background: none; border: none; font-size: 14pt;");
     }
 
-    grid->addWidget(d, 1, 0, Qt::AlignCenter);
-    grid->addWidget(h, 1, 1, Qt::AlignCenter);
-    grid->addWidget(m, 1, 2, Qt::AlignCenter);
-    grid->addWidget(s, 1, 3, Qt::AlignCenter);
+    grid->addWidget(dayText, 1, 0, Qt::AlignCenter);
+    grid->addWidget(hourText, 1, 1, Qt::AlignCenter);
+    grid->addWidget(minuteText, 1, 2, Qt::AlignCenter);
+    grid->addWidget(secondText, 1, 3, Qt::AlignCenter);
 
     auto layout = new QVBoxLayout(this);
     layout->addStretch();
@@ -240,11 +243,54 @@ void CountdownTile::updateCountdown() {
     QDateTime now = QDateTime::currentDateTime();
     qint64 secs = now.secsTo(targetDateTime);
 
+    dayLabel->show();
+    hourLabel->show();
+    minuteLabel->show();
+    secondLabel->show();
+
+    for (QObject* child : children()) {
+        if (auto* label = qobject_cast<QLabel*>(child)) {
+            QString text = label->text().toLower();
+            if (text == "days" || text == "hours" || text == "minutes" || text == "seconds") {
+                label->show();
+            }
+        }
+    }
+
     if (secs <= 0) {
-        dayLabel->setText("0");
-        hourLabel->setText("00");
-        minuteLabel->setText("00");
-        secondLabel->setText("00");
+        if (!unhideAfterExpiry) {
+            // Hide numbers
+            dayLabel->setVisible(false);
+            hourLabel->setVisible(false);
+            minuteLabel->setVisible(false);
+            secondLabel->setVisible(false);
+            dayText->setVisible(false);
+            hourText->setVisible(false);
+            minuteText->setVisible(false);
+            secondText->setVisible(false);
+            return;
+        }
+
+        // Show numbers and count up
+        dayLabel->setVisible(true);
+        hourLabel->setVisible(true);
+        minuteLabel->setVisible(true);
+        secondLabel->setVisible(true);
+        dayText->setVisible(true);
+        hourText->setVisible(true);
+        minuteText->setVisible(true);
+        secondText->setVisible(true);
+
+        qint64 secsSince = targetDateTime.secsTo(now);
+        int days = secsSince / 86400;
+        int hours = (secsSince % 86400) / 3600;
+        int minutes = (secsSince % 3600) / 60;
+        int seconds = secsSince % 60;
+
+        dayLabel->setText(QString::number(days));
+        hourLabel->setText(QString("%1").arg(hours, 2, 10, QChar('0')));
+        minuteLabel->setText(QString("%1").arg(minutes, 2, 10, QChar('0')));
+        secondLabel->setText(QString("%1").arg(seconds, 2, 10, QChar('0')));
         return;
     }
 
@@ -293,6 +339,23 @@ void CountdownTile::resizeEvent(QResizeEvent *event) {
         int btnX = width() - deleteButton->width() - editButton->width() - 15;
         editButton->move(btnX, 10);
     }
+}
+
+void CountdownTile::setShowCountUp(bool enabled) {
+    showCountUp = enabled;
+}
+
+bool CountdownTile::getShowCountUp() const {
+    return showCountUp;
+}
+
+void CountdownTile::setUnhideAfterExpiry(bool value) {
+    unhideAfterExpiry = value;
+    updateCountdown();  // Ensure state change triggers countdown display refresh
+}
+
+bool CountdownTile::getUnhideAfterExpiry() const {
+    return unhideAfterExpiry;
 }
 
 QString CountdownTile::getBackgroundImagePath() const {

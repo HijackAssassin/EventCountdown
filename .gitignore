@@ -1,0 +1,28 @@
+# Qt build files
+build*/
+*.pro.user
+*.pro.user.*
+*.autosave
+*.qmake.stash
+*.qrc.depends
+*.qrc.includes
+Makefile*
+*.moc
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.a
+
+# Qt Creator settings
+*.creator.*
+*.user
+*.user.*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Exclude build directory
+build/
