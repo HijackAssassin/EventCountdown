@@ -64,12 +64,12 @@ public:
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName("scrollAreaWidgetContents");
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 1900, 975));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 1900, 932));
         gridLayout_2 = new QGridLayout(scrollAreaWidgetContents);
         gridLayout_2->setObjectName("gridLayout_2");
         tileGridWidget = new QGridLayout();
         tileGridWidget->setObjectName("tileGridWidget");
-        tileGridWidget->setSizeConstraint(QLayout::SetDefaultConstraint);
+        tileGridWidget->setSizeConstraint(QLayout::SizeConstraint::SetDefaultConstraint);
 
         gridLayout_2->addLayout(tileGridWidget, 0, 0, 1, 1);
 
@@ -80,7 +80,7 @@ public:
         createFrame = new QFrame(centralwidget);
         createFrame->setObjectName("createFrame");
         createFrame->setVisible(false);
-        createFrame->setFrameShape(QFrame::StyledPanel);
+        createFrame->setFrameShape(QFrame::Shape::StyledPanel);
         horizontalLayout = new QHBoxLayout(createFrame);
         horizontalLayout->setObjectName("horizontalLayout");
         titleInput = new QLineEdit(createFrame);

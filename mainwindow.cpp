@@ -14,6 +14,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include "editcountdowndialog.h"
+#include <QStandardPaths>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -35,6 +36,9 @@ MainWindow::MainWindow(QWidget *parent)
         ui->yearCombo->addItem(QString::number(y), y);
 
     ui->yearCombo->setCurrentText(QString::number(currentYear));
+    ui->yearCombo->setEditable(true);
+    ui->yearCombo->lineEdit()->setValidator(new QIntValidator(1000, 9999, this));
+    ui->yearCombo->setMinimumWidth(80);  // Or try 100 if it's still tight
 
     QLocale locale;
     for (int m = 1; m <= 12; ++m)
@@ -183,7 +187,9 @@ void MainWindow::saveCountdowns() {
         array.append(obj);
     }
 
-    QFile file("countdowns.json");
+    QString savePath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QDir().mkpath(savePath);  // Create folder if it doesn't exist
+    QFile file(savePath + "/countdowns.json");
     if (file.open(QIODevice::WriteOnly)) {
         QJsonDocument doc(array);
         file.write(doc.toJson());
@@ -194,7 +200,8 @@ void MainWindow::saveCountdowns() {
 void MainWindow::loadCountdowns() {
     isLoading = true;
 
-    QFile file("countdowns.json");
+    QString savePath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QFile file(savePath + "/countdowns.json");
     if (!file.open(QIODevice::ReadOnly)) {
         isLoading = false;
         return;
@@ -222,8 +229,6 @@ void MainWindow::loadCountdowns() {
         tileCount++;
 
         connect(tile, &CountdownTile::requestDelete, this, &MainWindow::handleTileDeletion);
-
-        // ✅ Connect the edit signal here
         connect(tile, &CountdownTile::requestEdit, this, [this, tile]() {
             editingTile = tile;
             ui->plusButton->setText("Cancel Edit");

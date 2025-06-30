@@ -1,0 +1,36 @@
+1. Push New Code to GitHub
+
+# Make sure your in the project folder
+cd D:\Patrick\Documents\EventCountdowns
+
+# Stage all changes
+git add .
+
+# Commit with a message
+git commit -m "Update: fixed build save issue"
+
+# Push to GitHub
+git push origin main  # or use 'master' if your branch is named that
+
+
+
+2. Build the App (Clean & Release)
+
+# Make sure your in the project folder
+cd D:\Patrick\Documents\EventCountdowns
+
+# (optional) remove previous build folder to clean it fully
+rmdir /S /Q build
+
+# Build the project
+cmake --build . --config Release
+
+
+
+3. Deploy Qt DLLs with windeployqt
+
+# Make sure your in the build folder
+cd D:\Patrick\Documents\EventCountdowns\build\Desktop_Qt_6_9_1_MinGW_64_bit-Release
+
+# Run windeployqt on the .exe
+"C:\Qt\6.9.1\mingw_64\bin\windeployqt.exe" EventCountdowns.exe
