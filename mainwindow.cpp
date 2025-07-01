@@ -65,8 +65,15 @@ void MainWindow::handleImageSelection() {
         if (!imageDir.exists()) imageDir.mkpath(".");
 
         QString destPath = imageDir.filePath(QFileInfo(file).fileName());
-        QFile::copy(file, destPath);
-        selectedImagePath = destPath;
+        if (QFile::exists(destPath)) {
+            QFile::remove(destPath);  // 🔁 Overwrite if same-name image already exists
+        }
+        if (QFile::copy(file, destPath)) {
+            selectedImagePath = destPath;
+        } else {
+            qWarning() << "Failed to copy image to" << destPath;
+            selectedImagePath.clear();
+        }
     }
 }
 
@@ -99,7 +106,7 @@ void MainWindow::handleCreateButton() {
     QString title = ui->titleInput->text().trimmed();
     if (title.isEmpty()) title = "Untitled Event";
 
-    int year = ui->yearCombo->currentData().toInt();
+    int year = ui->yearCombo->currentText().toInt();
     int month = ui->monthCombo->currentData().toInt();
     int day = ui->dayCombo->currentData().toInt();
     int hour = ui->hourCombo->currentData().toInt();
