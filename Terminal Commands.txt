@@ -7,7 +7,7 @@ cd D:\Patrick\Documents\EventCountdowns
 git add .
 
 # Commit with a message
-git commit -m "Update 3 Bug Fixes and Polishing"
+git commit -m "Update 4 Bug Fixes"
 
 # Push to GitHub
 git push origin main  # or use 'master' if your branch is named that

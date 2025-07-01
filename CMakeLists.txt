@@ -41,6 +41,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         resources.qrc
         editcountdowndialog.h
         editcountdowndialog.cpp
+        outlinedlabel.h
 
     )
 else()

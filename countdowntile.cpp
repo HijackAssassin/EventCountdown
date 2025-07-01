@@ -3,6 +3,7 @@
 #include <QPushButton>
 #include <QFile>
 #include <QPainter>
+#include "outlinedlabel.h"
 
 QTimer* CountdownTile::sharedTimer = nullptr;
 QList<CountdownTile*> CountdownTile::allTiles;
@@ -38,10 +39,10 @@ CountdownTile::CountdownTile(const QString &title, const QDateTime &target, QWid
         "border: none;"
         );
 
-    dayLabel = new QLabel("0", this);
-    hourLabel = new QLabel("00", this);
-    minuteLabel = new QLabel("00", this);
-    secondLabel = new QLabel("00", this);
+    dayLabel = new OutlinedLabel("0", this);
+    hourLabel = new OutlinedLabel("00", this);
+    minuteLabel = new OutlinedLabel("00", this);
+    secondLabel = new OutlinedLabel("00", this);
 
     dayLabel->setStyleSheet(
         "color: white;"
@@ -100,10 +101,10 @@ CountdownTile::CountdownTile(const QString &title, const QDateTime &target, QWid
     grid->addWidget(secondLabel, 0, 3, Qt::AlignCenter);
 
     // 🏷️ Labels row (row 1)
-    dayText = new QLabel("days", this);
-    hourText = new QLabel("hours", this);
-    minuteText = new QLabel("minutes", this);
-    secondText = new QLabel("seconds", this);
+    dayText = new OutlinedLabel("days", this);
+    hourText = new OutlinedLabel("hours", this);
+    minuteText = new OutlinedLabel("minutes", this);
+    secondText = new OutlinedLabel("seconds", this);
 
     dayText->setAlignment(Qt::AlignCenter);
     dayText->setStyleSheet("color: white; background: none; border: none; margin-top: 0px; font-size: 14pt;");
