@@ -28,10 +28,9 @@ CountdownTile::CountdownTile(const QString &title, const QDateTime &target, QWid
         "}"
         );
 
-    titleLabel = new QLabel(title, this);
+    titleLabel = new OutlinedLabel(title, this);
     titleLabel->setAlignment(Qt::AlignLeft | Qt::AlignBottom);
     titleLabel->setStyleSheet(
-        "color: white;"
         "font-size: 18pt;"
         "font-weight: bold;"
         "padding: 5px;"
