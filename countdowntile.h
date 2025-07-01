@@ -16,6 +16,9 @@ class CountdownTile : public QFrame
     Q_OBJECT
 
 public:
+    void updateTextColor();
+    void setUseBlackText(bool enable);
+    bool getUseBlackText() const;
     void setUnhideAfterExpiry(bool enabled);
     bool getUnhideAfterExpiry() const;
     void setShowCountUp(bool enabled);
@@ -37,6 +40,7 @@ signals:
     void requestEdit(CountdownTile* tile);
 
 private:
+    bool useBlackText = false;
     bool unhideAfterExpiry = false;
     bool showCountUp = false;
     QLabel *titleLabel;

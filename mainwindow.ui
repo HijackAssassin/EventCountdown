@@ -60,6 +60,20 @@
          </property>
         </widget>
        </item>
+ 	<item>
+  	<widget class="QCheckBox" name="unhideCheckBox">
+   	<property name="text">
+    	<string>Count Up</string>
+   	</property>
+  	</widget>
+ 	</item>
+ 	<item>
+  	<widget class="QCheckBox" name="blackTextCheckBox">
+   	<property name="text">
+    	<string>Black Text</string>
+   	</property>
+  	</widget>
+ 	</item>
        <item>
         <widget class="QComboBox" name="yearCombo"/>
        </item>
@@ -71,13 +85,6 @@
        </item>
        <item>
         <widget class="QComboBox" name="hourCombo"/>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="unhideCheckBox">
-         <property name="text">
-          <string>Count Up</string>
-         </property>
-        </widget>
        </item>
        <item>
         <widget class="QPushButton" name="chooseImageButton">

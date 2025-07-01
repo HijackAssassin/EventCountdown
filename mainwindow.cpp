@@ -106,11 +106,13 @@ void MainWindow::handleCreateButton() {
     QDateTime datetime(QDate(year, month, day), QTime(hour, 0));
 
     bool unhide = ui->unhideCheckBox->isChecked();
+    bool blackText = ui->blackTextCheckBox->isChecked();
 
     if (editingTile) {
         editingTile->setTitle(title);
         editingTile->setTargetDateTime(datetime);
         editingTile->setUnhideAfterExpiry(unhide);
+        editingTile->setUseBlackText(blackText);
         if (!selectedImagePath.isEmpty()) {
             editingTile->setBackgroundImage(selectedImagePath);
         }
@@ -120,17 +122,19 @@ void MainWindow::handleCreateButton() {
         selectedImagePath.clear();
         saveCountdowns();
     } else {
-        handleCountdownCreated(title, datetime, unhide);
+        handleCountdownCreated(title, datetime, unhide, blackText);
+
     }
 
     ui->titleInput->clear();
     ui->createFrame->setVisible(false);
 }
 
-void MainWindow::handleCountdownCreated(const QString &title, const QDateTime &target, bool unhide) {
+void MainWindow::handleCountdownCreated(const QString &title, const QDateTime &target, bool unhide, bool blackText) {
     CountdownTile *tile = new CountdownTile(title, target);
     tile->setUnhideAfterExpiry(unhide);
     tile->setFixedSize(627, 353);
+    tile->setUseBlackText(blackText);
 
     if (!selectedImagePath.isEmpty()) {
         tile->setBackgroundImage(selectedImagePath);
@@ -156,6 +160,7 @@ void MainWindow::handleCountdownCreated(const QString &title, const QDateTime &t
         ui->plusButton->setText("Cancel Edit");
         ui->createButton->setText("Save Event");
         ui->titleInput->setText(tile->getTitle());
+        ui->blackTextCheckBox->setChecked(tile->getUseBlackText());
 
         QDateTime dt = tile->getTargetDateTime();
         ui->yearCombo->setCurrentText(QString::number(dt.date().year()));
@@ -181,6 +186,7 @@ void MainWindow::saveCountdowns() {
         obj["datetime"] = tile->getTargetDateTime().toString(Qt::ISODate);
         obj["background"] = tile->getBackgroundImagePath();
         obj["unhideAfterExpiry"] = tile->getUnhideAfterExpiry();
+        obj["blackText"] = tile->getUseBlackText();
         array.append(obj);
     }
 
@@ -217,6 +223,7 @@ void MainWindow::loadCountdowns() {
         CountdownTile *tile = new CountdownTile(title, dt);
         if (!bgPath.isEmpty())
             tile->setBackgroundImage(bgPath);
+        tile->setUseBlackText(obj["blackText"].toBool());
 
         tile->setFixedSize(627, 353);
         int col = tileCount % 3;
@@ -232,6 +239,7 @@ void MainWindow::loadCountdowns() {
             ui->createButton->setText("Save Event");
             ui->titleInput->setText(tile->getTitle());
             ui->unhideCheckBox->setChecked(tile->getUnhideAfterExpiry());
+            ui->blackTextCheckBox->setChecked(tile->getUseBlackText());
 
             QDateTime dt = tile->getTargetDateTime();
             ui->yearCombo->setCurrentText(QString::number(dt.date().year()));

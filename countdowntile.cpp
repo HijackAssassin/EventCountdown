@@ -217,6 +217,7 @@ CountdownTile::CountdownTile(const QString &title, const QDateTime &target, QWid
 
     allTiles.append(this);
     updateCountdown();
+    updateTextColor();
 }
 
 void CountdownTile::setBackgroundImage(const QString &imagePath) {
@@ -360,4 +361,32 @@ bool CountdownTile::getUnhideAfterExpiry() const {
 
 QString CountdownTile::getBackgroundImagePath() const {
     return backgroundImagePath;
+}
+
+void CountdownTile::setUseBlackText(bool useBlack) {
+    useBlackText = useBlack;
+    updateTextColor();
+}
+
+bool CountdownTile::getUseBlackText() const {
+    return useBlackText;
+}
+
+void CountdownTile::updateTextColor() {
+    QString color = useBlackText ? "black" : "white";
+
+    QString numStyle = QString("color: %1; font-size: %2pt; background: transparent; border: none;")
+                           .arg(color);
+
+    dayLabel->setStyleSheet(numStyle.arg(60));
+    hourLabel->setStyleSheet(numStyle.arg(40));
+    minuteLabel->setStyleSheet(numStyle.arg(40));
+    secondLabel->setStyleSheet(numStyle.arg(40));
+
+    QString labelStyle = QString("color: %1; background: none; border: none; font-size: 14pt;").arg(color);
+
+    dayText->setStyleSheet(labelStyle);
+    hourText->setStyleSheet(labelStyle);
+    minuteText->setStyleSheet(labelStyle);
+    secondText->setStyleSheet(labelStyle);
 }
