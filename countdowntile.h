@@ -16,6 +16,8 @@ class CountdownTile : public QFrame
     Q_OBJECT
 
 public:
+    QPixmap cachedBackground;
+    QSize lastSize;
     void updateTextColor();
     void setUseBlackText(bool enable);
     bool getUseBlackText() const;

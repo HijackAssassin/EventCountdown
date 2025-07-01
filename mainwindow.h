@@ -36,6 +36,7 @@ private:
     bool editMode = false;
     QString selectedImagePath;  // stores the image copied into the app folder
     CountdownTile* editingTile = nullptr;
+    void refreshTileLayout();
 };
 
 #endif // MAINWINDOW_H

@@ -222,22 +222,25 @@ CountdownTile::CountdownTile(const QString &title, const QDateTime &target, QWid
 
 void CountdownTile::setBackgroundImage(const QString &imagePath) {
     backgroundImagePath = imagePath;
-    update(); // trigger repaint with new image
+    cachedBackground = QPixmap();  // reset cache
+    update();
 }
 
 void CountdownTile::paintEvent(QPaintEvent* event) {
     QPainter painter(this);
-
     if (!backgroundImagePath.isEmpty() && QFile::exists(backgroundImagePath)) {
-        QPixmap bg(backgroundImagePath);
-        bg = bg.scaled(size(), Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
-        QPoint center((width() - bg.width()) / 2, (height() - bg.height()) / 2);
-        painter.drawPixmap(center, bg);
+        if (cachedBackground.isNull() || size() != lastSize) {
+            QPixmap bg(backgroundImagePath);
+            cachedBackground = bg.scaled(size(), Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+            lastSize = size();
+        }
+        QPoint center((width() - cachedBackground.width()) / 2, (height() - cachedBackground.height()) / 2);
+        painter.drawPixmap(center, cachedBackground);
     } else {
-        painter.fillRect(rect(), Qt::black); // solid black fallback
+        painter.fillRect(rect(), Qt::black);
     }
 
-    QFrame::paintEvent(event); // ensure children are drawn correctly
+    QFrame::paintEvent(event);
 }
 
 void CountdownTile::updateCountdown() {

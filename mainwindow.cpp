@@ -128,6 +128,7 @@ void MainWindow::handleCreateButton() {
         ui->createButton->setText("Create Event");
         selectedImagePath.clear();
         saveCountdowns();
+        refreshTileLayout();
     } else {
         handleCountdownCreated(title, datetime, unhide, blackText);
 
@@ -183,6 +184,7 @@ void MainWindow::handleCountdownCreated(const QString &title, const QDateTime &t
         applyCreateFrameStyle();
         ui->createFrame->setVisible(true);
     });
+    refreshTileLayout();
 }
 
 void MainWindow::saveCountdowns() {
@@ -221,6 +223,8 @@ void MainWindow::loadCountdowns() {
     file.close();
 
     QJsonArray array = doc.array();
+    QList<CountdownTile*> loadedTiles;
+
     for (const QJsonValue& val : array) {
         QJsonObject obj = val.toObject();
         QString title = obj["title"].toString();
@@ -231,13 +235,10 @@ void MainWindow::loadCountdowns() {
         if (!bgPath.isEmpty())
             tile->setBackgroundImage(bgPath);
         tile->setUseBlackText(obj["blackText"].toBool());
+        tile->setUnhideAfterExpiry(obj["unhideAfterExpiry"].toBool());
 
         tile->setFixedSize(627, 353);
-        int col = tileCount % 3;
-        int row = tileCount / 3;
-        tileLayout->addWidget(tile, row, col);
-        tileLayout->setAlignment(tile, Qt::AlignHCenter);
-        tileCount++;
+        loadedTiles.append(tile);
 
         connect(tile, &CountdownTile::requestDelete, this, &MainWindow::handleTileDeletion);
         connect(tile, &CountdownTile::requestEdit, this, [this, tile]() {
@@ -262,6 +263,23 @@ void MainWindow::loadCountdowns() {
             applyCreateFrameStyle();
             ui->createFrame->setVisible(true);
         });
+    }
+
+    // 🔃 Sort tiles by date before adding to layout
+    std::sort(loadedTiles.begin(), loadedTiles.end(), [](CountdownTile* a, CountdownTile* b) {
+        return a->getTargetDateTime() < b->getTargetDateTime();
+    });
+
+    CountdownTile::getAllTiles().clear();
+    tileCount = 0;
+
+    for (CountdownTile* tile : loadedTiles) {
+        CountdownTile::getAllTiles().append(tile);
+        int col = tileCount % 3;
+        int row = tileCount / 3;
+        tileLayout->addWidget(tile, row, col);
+        tileLayout->setAlignment(tile, Qt::AlignHCenter);
+        tileCount++;
     }
 
     isLoading = false;
@@ -342,4 +360,29 @@ void MainWindow::applyCreateFrameStyle() {
                 padding: 6px;
             }
         )");
+}
+
+void MainWindow::refreshTileLayout() {
+    // Clear layout
+    QLayoutItem* item;
+    while ((item = tileLayout->takeAt(0)) != nullptr) {
+        if (item->widget()) tileLayout->removeWidget(item->widget());
+        delete item;
+    }
+
+    // Sort tiles by datetime
+    QList<CountdownTile*>& tiles = CountdownTile::getAllTiles();
+    std::sort(tiles.begin(), tiles.end(), [](CountdownTile* a, CountdownTile* b) {
+        return a->getTargetDateTime() < b->getTargetDateTime();
+    });
+
+    // Re-add to layout
+    tileCount = 0;
+    for (CountdownTile* tile : tiles) {
+        int col = tileCount % 3;
+        int row = tileCount / 3;
+        tileLayout->addWidget(tile, row, col);
+        tileLayout->setAlignment(tile, Qt::AlignHCenter);
+        tileCount++;
+    }
 }
