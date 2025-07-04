@@ -4,6 +4,7 @@
 #include <QFile>
 #include <QPainter>
 #include "outlinedlabel.h"
+#include <QMouseEvent>
 
 QTimer* CountdownTile::sharedTimer = nullptr;
 QList<CountdownTile*> CountdownTile::allTiles;
@@ -174,28 +175,6 @@ CountdownTile::CountdownTile(const QString &title, const QDateTime &target, QWid
     deleteButton->hide();
     deleteButton->raise();
 
-    // ⋯ Edit button
-    editButton = new QPushButton("⋯", this);
-    editButton->setFixedSize(30, 30);
-    editButton->setStyleSheet(
-        "QPushButton {"
-        " background: none;"
-        " border: none;"
-        " color: grey;"
-        " font-size: 28pt;"
-        " font-weight: bold;"
-        " }"
-        "QPushButton:hover {"
-        " color: blue;"
-        " }"
-        );
-    editButton->hide();
-    editButton->raise();
-
-    connect(editButton, &QPushButton::clicked, this, [this]() {
-        emit requestEdit(this);  // ✅ pass the tile to mainwindow
-    });
-
     connect(deleteButton, &QPushButton::clicked, this, [this]() {
         emit requestDelete(this);
     });
@@ -311,7 +290,6 @@ void CountdownTile::updateCountdown() {
 
 void CountdownTile::setDeleteButtonVisible(bool visible) {
     if (deleteButton) deleteButton->setVisible(visible);
-    if (editButton)   editButton->setVisible(visible);
 }
 
 QString CountdownTile::getTitle() const {
@@ -337,11 +315,6 @@ void CountdownTile::resizeEvent(QResizeEvent *event) {
     if (deleteButton) {
         int btnX = width() - deleteButton->width() - 10;
         deleteButton->move(btnX, 10);
-    }
-
-    if (editButton) {
-        int btnX = width() - deleteButton->width() - editButton->width() - 15;
-        editButton->move(btnX, 10);
     }
 }
 
@@ -392,4 +365,16 @@ void CountdownTile::updateTextColor() {
     hourText->setStyleSheet(labelStyle);
     minuteText->setStyleSheet(labelStyle);
     secondText->setStyleSheet(labelStyle);
+}
+void CountdownTile::mousePressEvent(QMouseEvent *event) {
+    if (!isEditMode) return;
+
+    if (deleteButton && deleteButton->geometry().contains(event->pos()))
+        return;  // Prevent conflict with delete
+
+    emit requestEdit(this);
+}
+
+void CountdownTile::setEditModeEnabled(bool enabled) {
+    isEditMode = enabled;
 }

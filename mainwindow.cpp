@@ -15,12 +15,50 @@
 #include <QFileInfo>
 #include "editcountdowndialog.h"
 #include <QStandardPaths>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
     showMaximized();
     setWindowTitle("Event Countdown Manager");
+    ui->editModeButton->setMinimumSize(60, 60);
+    ui->editModeButton->setStyleSheet(R"(
+    QPushButton {
+        background-color: #686A71;
+        border: none;
+        border-radius: 30px;
+        color: #000000;
+        font-size: 20pt;
+        font-weight: bold;
+        padding: 10px;
+    }
+    QPushButton:hover {
+        background-color: #808080;
+    }
+    QPushButton:pressed {
+        background-color: #808080;
+    }
+)");
+    // Size: same as editmodebutton, round shape via border-radius
+    ui->plusButton->setMinimumSize(60, 60);
+
+    ui->plusButton->setStyleSheet(R"(
+    QPushButton {
+        background-color: #0078D4;
+        color: white;
+        font-size: 28pt;
+        font-weight: bold;
+        border-radius: 30px;  /* half of height */
+        border: none;
+    }
+    QPushButton:hover {
+        background-color: #3399FF;
+    }
+    QPushButton:pressed {
+        background-color: #005A9E;
+    }
+)");
 
     if (isDarkModeEnabled())
         setStyleSheet("background-color: #1e1e1e; color: white;");
@@ -290,12 +328,31 @@ void MainWindow::toggleEditMode() {
 
     for (CountdownTile* tile : CountdownTile::getAllTiles()) {
         tile->setDeleteButtonVisible(editMode);
+        tile->setEditModeEnabled(editMode);
+
+        // Close edit form if exiting edit mode
+        if (!editMode && editingTile) {
+            editingTile = nullptr;
+            ui->createFrame->setVisible(false);
+            ui->plusButton->setText("+");
+            ui->createButton->setText("Create Event");
+            ui->titleInput->clear();
+            selectedImagePath.clear();
+        }
     }
 
     ui->editModeButton->setText(editMode ? "Done" : "Edit Mode");
 }
 
 void MainWindow::handleTileDeletion(CountdownTile* tile) {
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, "Delete Tile",
+                                  "Are you sure you want to delete this tile?",
+                                  QMessageBox::Yes | QMessageBox::No);
+
+    if (reply != QMessageBox::Yes)
+        return;
+
     if (editingTile == tile) {
         editingTile = nullptr;
         ui->createFrame->setVisible(false);

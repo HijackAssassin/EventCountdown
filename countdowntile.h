@@ -16,6 +16,7 @@ class CountdownTile : public QFrame
     Q_OBJECT
 
 public:
+    void setEditModeEnabled(bool enabled);
     QPixmap cachedBackground;
     QSize lastSize;
     void updateTextColor();
@@ -56,7 +57,7 @@ private:
     QString backgroundImagePath;
     void updateCountdown();
     QString selectedImagePath;
-    QPushButton* editButton = nullptr;
+    bool isEditMode = false;
     QLabel *dayText;
     QLabel *hourText;
     QLabel *minuteText;
@@ -68,6 +69,7 @@ private:
 protected:
     void resizeEvent(QResizeEvent *event) override;
     void paintEvent(QPaintEvent* event) override;
+    void mousePressEvent(QMouseEvent *event) override;
 };
 
 #endif // COUNTDOWNTILE_H
