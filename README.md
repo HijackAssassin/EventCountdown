@@ -23,4 +23,8 @@ If you dont see why you would use it, well I will tell you personally I like to 
 
 Importing and Exporting:
 
-All tiles are saved in a countdown.json file and custom images are saved in a folder named tile_images located at C:\Users\"user"\AppData\Roaming\EventCountdowns for a shortcut to get to the roaming folder you can type %appdata% into the windows search bar.
+All tiles are saved in a countdown.json file and custom images are saved in a folder named tile_images located at the directory below.
+
+C:\Users\ "user" \AppData\Roaming\EventCountdowns 
+
+For a shortcut to get to the roaming folder you can type %appdata% into the windows search bar.
