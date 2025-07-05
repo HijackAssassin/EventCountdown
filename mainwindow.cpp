@@ -86,7 +86,12 @@ MainWindow::MainWindow(QWidget *parent)
         ui->dayCombo->addItem(QString::number(d), d);
 
     for (int h = 0; h < 24; ++h)
-        ui->hourCombo->addItem(QString("%1:00").arg(h, 2, 10, QChar('0')), h);
+        ui->hourCombo->addItem(QString("%1").arg(h, 2, 10, QChar('0')), h);
+
+    for (int m = 0; m < 60; ++m)
+        ui->minuteCombo->addItem(QString("%1").arg(m, 2, 10, QChar('0')), m);
+
+    ui->minuteCombo->setMinimumWidth(40);  // ensures 2-digit values are readable
 
     connect(ui->plusButton, &QPushButton::clicked, this, &MainWindow::onPlusButtonClicked);
     connect(ui->createButton, &QPushButton::clicked, this, &MainWindow::handleCreateButton);
@@ -148,7 +153,8 @@ void MainWindow::handleCreateButton() {
     int month = ui->monthCombo->currentData().toInt();
     int day = ui->dayCombo->currentData().toInt();
     int hour = ui->hourCombo->currentData().toInt();
-    QDateTime datetime(QDate(year, month, day), QTime(hour, 0));
+    int minute = ui->minuteCombo->currentData().toInt();
+    QDateTime datetime(QDate(year, month, day), QTime(hour, minute));
 
     bool unhide = ui->unhideCheckBox->isChecked();
     bool blackText = ui->blackTextCheckBox->isChecked();
@@ -212,7 +218,8 @@ void MainWindow::handleCountdownCreated(const QString &title, const QDateTime &t
         ui->yearCombo->setCurrentText(QString::number(dt.date().year()));
         ui->monthCombo->setCurrentIndex(dt.date().month() - 1);
         ui->dayCombo->setCurrentIndex(dt.date().day() - 1);
-        ui->hourCombo->setCurrentIndex(dt.time().hour());
+        ui->hourCombo->setCurrentIndex(ui->hourCombo->findData(dt.time().hour()));
+        ui->minuteCombo->setCurrentIndex(ui->minuteCombo->findData(dt.time().minute()));
 
         int w = 600, h = 250;
         int x = (this->width() - w) / 2;

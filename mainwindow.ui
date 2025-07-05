@@ -75,17 +75,90 @@
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="yearCombo"/>
-       </item>
+ <layout class="QVBoxLayout">
+  <item>
+   <widget class="QComboBox" name="dayCombo"/>
+  </item>
+  <item>
+   <widget class="QLabel" name="labelDay">
+    <property name="text">
+     <string>Day</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignHCenter</set>
+    </property>
+   </widget>
+  </item>
+ </layout>
+</item>
+	<item>
+ <layout class="QVBoxLayout">
+  <item>
+   <widget class="QComboBox" name="monthCombo"/>
+  </item>
+  <item>
+   <widget class="QLabel" name="labelMonth">
+    <property name="text">
+     <string>Month</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignHCenter</set>
+    </property>
+   </widget>
+  </item>
+ </layout>
+</item>
+	<item>
+ <layout class="QVBoxLayout">
+  <item>
+   <widget class="QComboBox" name="yearCombo"/>
+  </item>
+  <item>
+   <widget class="QLabel" name="labelYear">
+    <property name="text">
+     <string>Year</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignHCenter</set>
+    </property>
+   </widget>
+  </item>
+ </layout>
+</item>
        <item>
-        <widget class="QComboBox" name="monthCombo"/>
-       </item>
-       <item>
-        <widget class="QComboBox" name="dayCombo"/>
-       </item>
-       <item>
-        <widget class="QComboBox" name="hourCombo"/>
-       </item>
+ <layout class="QVBoxLayout">
+  <item>
+   <widget class="QComboBox" name="hourCombo"/>
+  </item>
+  <item>
+   <widget class="QLabel" name="labelHour">
+    <property name="text">
+     <string>Hour</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignHCenter</set>
+    </property>
+   </widget>
+  </item>
+ </layout>
+</item>
+<item>
+ <layout class="QVBoxLayout">
+  <item>
+   <widget class="QComboBox" name="minuteCombo"/>
+  </item>
+  <item>
+   <widget class="QLabel" name="labelMinute">
+    <property name="text">
+     <string>Minute</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignHCenter</set>
+    </property>
+   </widget>
+  </item>
+ </layout>
+</item>
        <item>
         <widget class="QPushButton" name="chooseImageButton">
          <property name="text">
