@@ -2,4 +2,7 @@
  <qresource prefix="/assets/images">
   <file>assets/images/default.png</file>
  </qresource>
+<qresource prefix="/">
+    <file>icons/default_icon.ico</file>
+</qresource>
 </RCC>

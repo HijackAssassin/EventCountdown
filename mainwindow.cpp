@@ -299,6 +299,7 @@ void MainWindow::loadCountdowns() {
             ui->monthCombo->setCurrentIndex(dt.date().month() - 1);
             ui->dayCombo->setCurrentIndex(dt.date().day() - 1);
             ui->hourCombo->setCurrentIndex(dt.time().hour());
+            ui->minuteCombo->setCurrentIndex(ui->minuteCombo->findData(dt.time().minute()));
 
             int w = 600, h = 250;
             int x = (this->width() - w) / 2;
