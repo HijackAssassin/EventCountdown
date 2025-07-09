@@ -1,11 +1,30 @@
 #include "mainwindow.h"
 
 #include <QApplication>
+#include <QSharedMemory>
+#include <QMessageBox>
 
-int main(int argc, char *argv[])
-{
-    QApplication a(argc, argv);
+QSharedMemory sharedMemory("EventCountdownManagerAppInstance");
+
+bool isAnotherInstanceRunning() {
+    if (sharedMemory.attach()) {
+        sharedMemory.detach(); // If it's stuck
+        return true;
+    }
+    return !sharedMemory.create(1);
+}
+
+int main(int argc, char *argv[]) {
+    QApplication app(argc, argv);
+
+    if (isAnotherInstanceRunning()) {
+        QMessageBox::warning(nullptr, "Already Running", "The app is already running in the background.");
+        return 0;
+    }
+
     MainWindow w;
     w.show();
-    return a.exec();
+
+    return app.exec();
 }
+
