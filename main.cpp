@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
 
     if (isAnotherInstanceRunning()) {
-        QMessageBox::warning(nullptr, "Already Running", "The app is already running in the background.");
+        QMessageBox::warning(nullptr, "Already Running", "The app is already running in the background. Reopen from the system tray");
         return 0;
     }
 
