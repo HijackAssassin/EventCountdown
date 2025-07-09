@@ -22,6 +22,32 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     showMaximized();
     setWindowTitle("Event Countdown Manager");
+
+    trayIcon = new QSystemTrayIcon(this);
+    trayIcon->setIcon(QIcon(":/icons/default_icon.ico"));  // Replace with your icon
+    trayIcon->setToolTip("Event Countdown Manager");
+
+    // ✅ Create tray menu
+    trayMenu = new QMenu(this);
+    QAction *showAction = new QAction("Show", this);
+    QAction *quitAction = new QAction("Quit", this);
+    trayMenu->addAction(showAction);
+    trayMenu->addAction(quitAction);
+    trayIcon->setContextMenu(trayMenu);
+
+    // ✅ Connect actions
+    connect(showAction, &QAction::triggered, this, &MainWindow::show);
+    connect(quitAction, &QAction::triggered, qApp, &QApplication::quit);
+
+    trayIcon->show();  // ✅ visible in tray
+
+    // Optional: restore on left-click
+    connect(trayIcon, &QSystemTrayIcon::activated, this, [=](QSystemTrayIcon::ActivationReason reason) {
+        if (reason == QSystemTrayIcon::Trigger) {
+            this->show();
+        }
+    });
+
     ui->editModeButton->setMinimumSize(60, 60);
     ui->editModeButton->setStyleSheet(R"(
     QPushButton {
@@ -204,6 +230,11 @@ void MainWindow::handleCountdownCreated(const QString &title, const QDateTime &t
 
     ui->createFrame->setVisible(false);
 
+    connect(tile, &CountdownTile::countdownExpired, this, [this](const QString &title) {
+        trayIcon->showMessage("Countdown Finished For", QString("'%1' Has Ended!").arg(title),
+                              QSystemTrayIcon::Information, 8000);
+    });
+
     connect(tile, &CountdownTile::requestDelete, this, &MainWindow::handleTileDeletion);
 
     connect(tile, &CountdownTile::requestEdit, this, [this, tile]() {
@@ -284,6 +315,14 @@ void MainWindow::loadCountdowns() {
 
         tile->setFixedSize(627, 353);
         loadedTiles.append(tile);
+        connect(tile, &CountdownTile::countdownExpired, this, [this](const QString &title) {
+            trayIcon->showMessage(
+                "Countdown Finished",
+                QString("'%1' has ended!").arg(title),
+                QSystemTrayIcon::Information,
+                8000  // ms
+                );
+        });
 
         connect(tile, &CountdownTile::requestDelete, this, &MainWindow::handleTileDeletion);
         connect(tile, &CountdownTile::requestEdit, this, [this, tile]() {
@@ -449,5 +488,14 @@ void MainWindow::refreshTileLayout() {
         tileLayout->addWidget(tile, row, col);
         tileLayout->setAlignment(tile, Qt::AlignHCenter);
         tileCount++;
+    }
+}
+
+void MainWindow::closeEvent(QCloseEvent *event) {
+    if (trayIcon && trayIcon->isVisible()) {
+        hide();           // 👈 just hide window
+        event->ignore();  // 👈 do NOT quit app
+    } else {
+        QMainWindow::closeEvent(event);
     }
 }

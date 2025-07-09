@@ -226,49 +226,28 @@ void CountdownTile::updateCountdown() {
     QDateTime now = QDateTime::currentDateTime();
     qint64 secs = now.secsTo(targetDateTime);
 
-    dayLabel->show();
-    hourLabel->show();
-    minuteLabel->show();
-    secondLabel->show();
-
-    for (QObject* child : children()) {
-        if (auto* label = qobject_cast<QLabel*>(child)) {
-            QString text = label->text().toLower();
-            if (text == "days" || text == "hours" || text == "minutes" || text == "seconds") {
-                label->show();
-            }
-        }
-    }
-
     if (secs <= 0) {
+        if (!hasNotified) {
+            hasNotified = true;
+            emit countdownExpired(titleLabel->text());
+        }
+
         if (!unhideAfterExpiry) {
-            // Hide numbers
-            dayLabel->setVisible(false);
-            hourLabel->setVisible(false);
-            minuteLabel->setVisible(false);
-            secondLabel->setVisible(false);
-            dayText->setVisible(false);
-            hourText->setVisible(false);
-            minuteText->setVisible(false);
-            secondText->setVisible(false);
+            // Hide countdown
+            dayLabel->hide(); hourLabel->hide(); minuteLabel->hide(); secondLabel->hide();
+            dayText->hide(); hourText->hide(); minuteText->hide(); secondText->hide();
             return;
         }
 
-        // Show numbers and count up
-        dayLabel->setVisible(true);
-        hourLabel->setVisible(true);
-        minuteLabel->setVisible(true);
-        secondLabel->setVisible(true);
-        dayText->setVisible(true);
-        hourText->setVisible(true);
-        minuteText->setVisible(true);
-        secondText->setVisible(true);
-
+        // Show negative values (count-up)
         qint64 secsSince = targetDateTime.secsTo(now);
         int days = secsSince / 86400;
         int hours = (secsSince % 86400) / 3600;
         int minutes = (secsSince % 3600) / 60;
         int seconds = secsSince % 60;
+
+        dayLabel->show(); hourLabel->show(); minuteLabel->show(); secondLabel->show();
+        dayText->show(); hourText->show(); minuteText->show(); secondText->show();
 
         dayLabel->setText(QString::number(days));
         hourLabel->setText(QString("%1").arg(hours, 2, 10, QChar('0')));
@@ -276,6 +255,12 @@ void CountdownTile::updateCountdown() {
         secondLabel->setText(QString("%1").arg(seconds, 2, 10, QChar('0')));
         return;
     }
+
+    // ⏱ Target is in the future — ensure everything is shown again
+    hasNotified = false;
+
+    dayLabel->show(); hourLabel->show(); minuteLabel->show(); secondLabel->show();
+    dayText->show(); hourText->show(); minuteText->show(); secondText->show();
 
     int days = secs / 86400;
     int hours = (secs % 86400) / 3600;

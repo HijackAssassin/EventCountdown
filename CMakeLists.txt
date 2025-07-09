@@ -43,6 +43,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         editcountdowndialog.cpp
         outlinedlabel.h
 
+
+
     )
 else()
     if(ANDROID)
@@ -57,7 +59,6 @@ else()
 endif()
 
 target_link_libraries(EventCountdowns PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
-
 if(${QT_VERSION} VERSION_LESS 6.1.0)
     set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.EventCountdowns)
 endif()

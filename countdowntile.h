@@ -41,6 +41,7 @@ public:
 signals:
     void requestDelete(CountdownTile* tile);
     void requestEdit(CountdownTile* tile);
+    void countdownExpired(const QString& title);  // 🔔 triggered when a countdown ends
 
 private:
     bool useBlackText = false;
@@ -62,6 +63,7 @@ private:
     QLabel *hourText;
     QLabel *minuteText;
     QLabel *secondText;
+    bool hasNotified = false;
 
     static QTimer *sharedTimer;
     static QList<CountdownTile*> allTiles;

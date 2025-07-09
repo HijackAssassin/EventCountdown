@@ -4,6 +4,9 @@
 #include "countdowntile.h"
 #include <QMainWindow>
 #include <QGridLayout>
+#include <QSystemTrayIcon>  // ✅ tray icon
+#include <QMenu>            // ✅ tray menu
+#include <QCloseEvent>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -15,6 +18,9 @@ class MainWindow : public QMainWindow {
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+protected:
+    void closeEvent(QCloseEvent *event) override;  // ✅ intercept close event
 
 private slots:
     void applyCreateFrameStyle();
@@ -37,6 +43,8 @@ private:
     QString selectedImagePath;  // stores the image copied into the app folder
     CountdownTile* editingTile = nullptr;
     void refreshTileLayout();
+    QSystemTrayIcon *trayIcon;  // ✅ tray icon handle
+    QMenu *trayMenu;            // ✅ right-click menu
 };
 
 #endif // MAINWINDOW_H
