@@ -231,7 +231,7 @@ void MainWindow::handleCountdownCreated(const QString &title, const QDateTime &t
     ui->createFrame->setVisible(false);
 
     connect(tile, &CountdownTile::countdownExpired, this, [this](const QString &title) {
-        trayIcon->showMessage("Countdown Finished For", QString("'%1' Has Ended!").arg(title),
+        trayIcon->showMessage("Countdown Finished", QString("'%1' has ended!").arg(title),
                               QSystemTrayIcon::Information, 8000);
     });
 
