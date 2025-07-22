@@ -264,8 +264,30 @@ void MainWindow::handleCountdownCreated(const QString &title, const QDateTime &t
 }
 
 void MainWindow::saveCountdowns() {
+    QList<CountdownTile*> tiles = CountdownTile::getAllTiles();
+
+    // ✅ Don't overwrite a valid file with empty data
+    if (tiles.isEmpty()) {
+        QString path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/countdowns.json";
+        if (QFileInfo::exists(path) && QFileInfo(path).size() > 10) {
+            qWarning() << "Prevented accidental overwrite: tile list is empty.";
+            return;
+        }
+    }
+
+    // ✅ Make a backup before saving
+    QString savePath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QString mainFile = savePath + "/countdowns.json";
+    QString backupFile = savePath + "/countdowns_backup.json";
+
+    if (QFile::exists(mainFile)) {
+        QFile::remove(backupFile);
+        QFile::copy(mainFile, backupFile);
+    }
+
+    // ✅ Build JSON
     QJsonArray array;
-    for (CountdownTile* tile : CountdownTile::getAllTiles()) {
+    for (CountdownTile* tile : tiles) {
         QJsonObject obj;
         obj["title"] = tile->getTitle();
         obj["datetime"] = tile->getTargetDateTime().toString(Qt::ISODate);
@@ -275,10 +297,9 @@ void MainWindow::saveCountdowns() {
         array.append(obj);
     }
 
-    QString savePath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-    QDir().mkpath(savePath);  // Create folder if it doesn't exist
-    QFile file(savePath + "/countdowns.json");
-    if (file.open(QIODevice::WriteOnly)) {
+    // ✅ Write to file
+    QFile file(mainFile);
+    if (file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
         QJsonDocument doc(array);
         file.write(doc.toJson());
         file.close();
