@@ -223,6 +223,11 @@ void CountdownTile::paintEvent(QPaintEvent* event) {
 }
 
 void CountdownTile::updateCountdown() {
+    // Defensive check: if targetDateTime is invalid, don't process
+    if (!targetDateTime.isValid()) {
+        return;
+    }
+
     QDateTime now = QDateTime::currentDateTime();
     qint64 secs = now.secsTo(targetDateTime);
 
@@ -257,7 +262,10 @@ void CountdownTile::updateCountdown() {
     }
 
     // ⏱ Target is in the future — ensure everything is shown again
-    hasNotified = false;
+    // NOTE: hasNotified is intentionally NOT reset here every tick.
+    // It is only reset in setTargetDateTime() when the user changes the target date.
+    // Resetting it every second caused spurious notifications when secsTo() briefly
+    // returned <= 0 due to edge cases (clock sync, DST, invalid datetime).
 
     dayLabel->show(); hourLabel->show(); minuteLabel->show(); secondLabel->show();
     dayText->show(); hourText->show(); minuteText->show(); secondText->show();
@@ -291,6 +299,9 @@ void CountdownTile::setTitle(const QString& title) {
 
 void CountdownTile::setTargetDateTime(const QDateTime& datetime) {
     targetDateTime = datetime;
+    // Reset notification flag when target is explicitly changed by user
+    // This allows notifications to fire again for the new target date
+    hasNotified = false;
     updateCountdown();
 }
 

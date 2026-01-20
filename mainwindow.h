@@ -19,9 +19,6 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-protected:
-    void closeEvent(QCloseEvent *event) override;  // ✅ intercept close event
-
 private slots:
     void applyCreateFrameStyle();
     void handleCreateButton();
